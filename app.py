@@ -1,5 +1,6 @@
 from transformers import pipeline, Conversation
 from flask import Flask, render_template, request
+from torch import device, cuda
 
 
 def chatbot_response(msg):
@@ -8,7 +9,9 @@ def chatbot_response(msg):
     return response
 
 
-pipe = pipeline(model="facebook/blenderbot-400M-distill", device="cuda:0")
+dev = device("cuda:0") if cuda.is_available() else device("cpu")
+pipe = pipeline(model="facebook/blenderbot-400M-distill",
+                device=dev)
 conv = Conversation()
 
 app = Flask(__name__)
